@@ -11,6 +11,19 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categories</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('contact') }}">Contact</a></li>
             </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('cart.index') }}">
+                        🛒 Cart 
+                        @php
+                            $cartCount = count(session()->get('cart', []));
+                        @endphp
+                        @if($cartCount > 0)
+                            <span class="badge bg-danger">{{ $cartCount }}</span>
+                        @endif
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>

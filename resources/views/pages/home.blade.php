@@ -39,9 +39,16 @@
           <div class="card-body d-flex flex-column">
             <h3 class="h6 mb-1">{{ $product->name }}</h3>
             <div class="text-muted small mb-2">{{ $product->category?->name }}</div>
-            <div class="mt-auto d-flex justify-content-between align-items-center">
+            <div class="mt-auto d-flex justify-content-between align-items-center gap-2">
               <span class="fw-semibold">${{ number_format($product->price, 2) }}</span>
-              <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-primary">View</a>
+              <div class="d-flex gap-1">
+                <form action="{{ route('cart.add', $product) }}" method="post" class="d-inline">
+                  @csrf
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="btn btn-sm btn-success" @if($product->stock < 1) disabled @endif>Add to Cart</button>
+                </form>
+                <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-primary">View</a>
+              </div>
             </div>
           </div>
         </div>

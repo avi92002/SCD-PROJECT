@@ -32,7 +32,7 @@
           $isExternal = \Illuminate\Support\Str::startsWith($raw, ['http://','https://']);
           $src = $isExternal ? $raw : asset(ltrim($raw ?? '', '/'));
         @endphp
-        <img src="{{ $src ?: asset('images/placeholder-product.svg') }}"
+        <img src="{{ $src ?: asset('images/placeholder-product.svg') }}?v={{ time() }}"
              class="card-img-top object-fit-cover" alt="{{ $product->name }}" style="height: 200px;"
              loading="lazy"
              onerror="this.onerror=null;this.src='{{ asset('images/placeholder-product.svg') }}';">
@@ -50,13 +50,22 @@
             <div class="text-muted small">Stock: {{ $product->stock }}</div>
           </div>
         </div>
-        <div class="card-footer bg-white d-flex gap-2 justify-content-end">
-          <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-primary">Edit</a>
-          <form action="{{ route('products.destroy', $product) }}" method="post" onsubmit="return confirm('Delete this product?');">
+        <div class="card-footer bg-white d-flex gap-2 justify-content-between">
+          <form action="{{ route('cart.add', $product) }}" method="post" class="d-inline">
             @csrf
-            @method('DELETE')
-            <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn btn-sm btn-success" @if($product->stock < 1) disabled @endif>
+              Add to Cart
+            </button>
           </form>
+          <div class="d-flex gap-2">
+            <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+            <form action="{{ route('products.destroy', $product) }}" method="post" onsubmit="return confirm('Delete this product?');">
+              @csrf
+              @method('DELETE')
+              <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
